@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Faiza Muneeb's social media marketing and pastry arts portfolio.">
+  <title>Faiza Muneeb – Social Media Marketing Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Italiana&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+<style>
+  .article-card {
+    display: block;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 16px;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.article-card:hover {
+    transform: translateY(-4px);
+}
+
+.article-card img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    display: block;
+}
+
+.article-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.8),
+        rgba(0,0,0,0.2)
+    );
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+}
+
+.article-type {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.article-overlay h4 {
+    margin: 6px 0;
+}
+
+.article-overlay p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <header class="site-header" id="home">
+    <nav class="nav container" aria-label="Main navigation">
+      <a class="brand" href="#home" aria-label="Faiza Muneeb home">
+        <span class="brand-mark" aria-hidden="true">FM</span>
+        <span>Faiza Muneeb</span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul class="nav-links" id="nav-links">
+        <li><a class="active" href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#portfolio">Portfolio</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#testimonial">Testimonial</a></li>
+        <li><a href="#resume">Resume</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <section class="hero section">
+      <div class="hero-bloom bloom-one" aria-hidden="true"></div>
+      <div class="hero-bloom bloom-two" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy reveal">
+          <p class="eyebrow">Pastry artistry meets digital storytelling</p>
+          <h1>Faiza <em>Muneeb</em></h1>
+          <p class="hero-tagline">Certified Pastry Chef <span>•</span> Social Media Marketing Student <span>•</span> Content Creator</p>
+          <p class="hero-intro">Creating beautiful edible art and engaging digital content through creativity, craftsmanship, and storytelling.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#portfolio">View Portfolio <span aria-hidden="true">↗</span></a>
+            <a class="button button-secondary" href="#contact">Contact Me</a>
+          </div>
+          <div class="hero-notes" aria-label="Areas of expertise">
+            <span>Floral desserts</span>
+            <span>Visual content</span>
+            <span>Brand stories</span>
+          </div>
+        </div>
+
+        <div class="hero-art reveal" aria-label="Decorative portfolio image placeholder">
+          <div class="art-frame">
+            <!-- Replace this placeholder with a real portrait or pastry image:
+                 <img src="images/faiza-hero.jpg" alt="Faiza Muneeb with a floral cupcake bouquet"> -->
+            <div class="media-placeholder hero-placeholder">
+              <div class="line-art" aria-hidden="true">
+                <span class="cake-base"></span>
+                <span class="flower flower-one">✿</span>
+                <span class="flower flower-two">❀</span>
+                <span class="flower flower-three">✿</span>
+                <span class="stem stem-one"></span>
+                <span class="stem stem-two"></span>
+              </div>
+              <p>Featured pastry or portrait</p>
+              <small>Replace with your image</small>
+            </div>
+          </div>
+          <div class="floating-card floating-card-top">
+            <span>✦</span>
+            <p>Certified<br><strong>Pastry Chef</strong></p>
+          </div>
+          <div class="floating-card floating-card-bottom">
+            <strong>Creative</strong>
+            <span>with intention</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about section" id="about">
+      <div class="container about-grid">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Get to know me</p>
+          <h2>A blend of artistry, strategy, and a little buttercream.</h2>
+          <div class="signature" aria-hidden="true">Faiza</div>
+        </div>
+        <div class="about-copy reveal">
+          <p class="lead">Hello, my name is Faiza Muneeb. I am a Certified Pastry Chef and Social Media Marketing student with a passion for creativity, baking, and digital storytelling.</p>
+          <p>I specialize in floral cupcake bouquets, custom royal icing cookies, and visually appealing dessert creations that combine artistry with craftsmanship.</p>
+          <p>In addition to baking, I enjoy creating content that educates, inspires, and connects with audiences. Through my studies and creative projects, I have developed skills in social media marketing, content creation, digital advertising, graphic design, and audience engagement.</p>
+          <p>My goal is to combine my creative talents with modern marketing strategies to help brands and businesses share their stories effectively.</p>
+          <div class="about-stats">
+            <div><strong>13</strong><span>Creative skills</span></div>
+            <div><strong>05</strong><span>Featured projects</span></div>
+            <div><strong>02</strong><span>Creative disciplines</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="portfolio section" id="portfolio">
+      <div class="container">
+        <div class="portfolio-heading reveal">
+          <div>
+            <p class="eyebrow">Selected work</p>
+            <h2>Stories made to be seen, shared, and savored.</h2>
+          </div>
+          <p>A collection of content, campaigns, and creative projects combining thoughtful strategy with strong visual storytelling.</p>
+        </div>
+
+        <div class="project-grid">
+          <article class="project-card project-featured reveal">
+            <div class="project-media media-pink">
+              <!-- Replace with a YouTube thumbnail or embedded video. -->
+              <div class="media-placeholder">
+    <iframe
+        
+        src="https://www.youtube.com/embed/L7WqMNbvPLc"
+        title="How a Cupcake Bouquet is Made"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+    </iframe>
+</div>
+            </div>
+            <div class="project-content">
+              <p class="project-category">YouTube Video Content</p>
+              <h3>How a Cupcake Bouquet is Made</h3>
+              <p>An educational video demonstrating the process of designing and decorating a floral cupcake bouquet from start to finish.</p>
+              <span class="project-link">View project <span aria-hidden="true">↗</span></span>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-media media-lavender">
+              <!-- Replace with a blog article screenshot or cover image. -->
+              <a href="https://cupflora.blogspot.com/2026/03/how-cupcake-bouquet-is-made.html"
+   target="_blank"
+   class="article-card">
+
+    <img src="images/cupcake-bouquet-article-thumbnail.jpg"
+         alt="How a Cupcake Bouquet is Made">
+
+    <div class="article-overlay">
+        <span class="article-type">Blog Article</span>
+        <h4>How a Cupcake Bouquet is Made</h4>
+        <p>Click to read article</p>
+    </div>
+
+</a>
+            </div>
+            <div class="project-content">
+              <p class="project-category">Blog Article / Content Marketing</p>
+              <h3>How a Cupcake Bouquet is Made</h3>
+              <p>A written content piece explaining the tools, techniques, and creative process involved in making cupcake bouquets.</p>
+              <span class="project-link">View project <span aria-hidden="true">↗</span></span>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-media media-cream">
+              <!-- Replace with the completed Facebook advertisement image. -->
+              <div class="media-placeholder">
+    <img src="images/facebook-ad.png"
+         alt="Cupcake Cookie Bouquet Facebook Advertisement"
+         class="portfolio-image">
+</div>
+            </div>
+            <div class="project-content">
+              <p class="project-category">Graphic Design / Facebook Advertising</p>
+              <h3>Cupcake Cookie Bouquet Facebook Advertisement</h3>
+              <p>A promotional Facebook ad designed to showcase a custom cupcake cookie bouquet and attract potential customers.</p>
+              <span class="project-link">View project <span aria-hidden="true">↗</span></span>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-media media-purple">
+              <!-- Replace with an Instagram Reel cover or embedded video. -->
+              <div class="media-placeholder">
+    <img src="images/instagram-reel.jpg"
+         alt="Cupcake Cookie Bouquet Facebook Advertisement"
+         class="portfolio-image">
+</div>
+            </div>
+            <div class="project-content">
+              <p class="project-category">Short-Form Video Content</p>
+              <h3>Cupcake Bouquet Instagram Reel</h3>
+              <p>A short-form video created to engage audiences and highlight the beauty and craftsmanship of floral cupcake bouquets.</p>
+              <span class="project-link">View project <span aria-hidden="true">↗</span></span>
+            </div>
+          </article>
+
+          <article class="project-card project-wide reveal">
+            <div class="project-media media-gold">
+              <!-- Replace with the completed SD Catering advertisement image. -->
+              <div class="media-placeholder">
+    <img src="images/paratha.png"
+         alt="Cupcake Cookie Bouquet Facebook Advertisement"
+         class="portfolio-image">
+</div>
+            </div>
+            <div class="project-content">
+              <p class="project-category">Digital Advertising</p>
+              <h3>SD Catering Lacha Paratha Advertisement</h3>
+              <p>A social media advertisement created to promote freshly prepared lacha parathas and increase awareness of SD Catering services.</p>
+              <span class="project-link">View project <span aria-hidden="true">↗</span></span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="skills section" id="skills">
+      <div class="container skills-grid">
+        <div class="section-heading reveal">
+          <p class="eyebrow">What I bring</p>
+          <h2>Creative hands.<br>Strategic mind.</h2>
+          <p class="section-description">From the first idea to the final post, I bring together content, design, and detail.</p>
+        </div>
+        <div class="skill-list reveal" aria-label="Skills">
+          <span>Social Media Marketing</span>
+          <span>Content Creation</span>
+          <span>Digital Advertising</span>
+          <span>Graphic Design</span>
+          <span>Video Editing</span>
+          <span>Canva Design</span>
+          <span>Copywriting</span>
+          <span>Content Strategy</span>
+          <span>Audience Engagement</span>
+          <span>Baking &amp; Pastry Arts</span>
+          <span>Cupcake Bouquet Design</span>
+          <span>Royal Icing Cookie Decorating</span>
+          <span>Brand Storytelling</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="testimonial section" id="testimonial">
+      <div class="container">
+        <div class="testimonial-card reveal">
+          <div class="quote-mark" aria-hidden="true">“</div>
+          <blockquote>
+            <p>Faiza demonstrates creativity, attention to detail, and strong visual communication skills through her baking and digital content projects.</p>
+            <footer>
+              <span class="avatar" aria-hidden="true">F</span>
+              <div>
+                <strong>Portfolio Feedback</strong>
+                <span>Academic testimonial placeholder</span>
+              </div>
+            </footer>
+          </blockquote>
+          <div class="testimonial-flower" aria-hidden="true">✿</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="resume section" id="resume">
+      <div class="container resume-card reveal">
+        <div>
+          <p class="eyebrow">Experience &amp; education</p>
+          <h2>The details behind the work.</h2>
+        </div>
+        <div class="resume-action">
+          <p>Download my resume to learn more about my education, skills, and professional background.</p>
+          <!-- Place resume.pdf in the same folder as index.html. -->
+          <a class="button button-primary" href="resume.pdf" download>Download Resume <span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact section" id="contact">
+      <div class="container contact-grid">
+        <div class="contact-intro reveal">
+          <p class="eyebrow">Let's connect</p>
+          <h2>Have a sweet idea in mind?</h2>
+          <p>Whether you want to talk content, collaborate on a creative project, or simply say hello, I would love to hear from you.</p>
+          <ul class="contact-links">
+            <li>
+              <span>Email</span>
+              <a href="mailto:faiza.email@example.com">faiza.email@example.com</a>
+            </li>
+            <li>
+              <span>LinkedIn</span>
+              <a href="https://linkedin.com/in/faizamuneeb" target="_blank" rel="noopener noreferrer">linkedin.com/in/faizamuneeb</a>
+            </li>
+            <li>
+              <span>Instagram</span>
+              <a href="https://instagram.com/faizamuneeb" target="_blank" rel="noopener noreferrer">@faizamuneeb</a>
+            </li>
+          </ul>
+          <small class="update-note">Contact details are placeholders and can be updated later.</small>
+        </div>
+
+        <form class="contact-form reveal" id="contact-form">
+          <div class="form-row">
+            <div class="field">
+              <label for="name">Your name</label>
+              <input type="text" id="name" name="name" placeholder="Jane Smith" required>
+            </div>
+            <div class="field">
+              <label for="email">Email address</label>
+              <input type="email" id="email" name="email" placeholder="jane@example.com" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="message">Your message</label>
+            <textarea id="message" name="message" rows="6" placeholder="Tell me a little about your idea..." required></textarea>
+          </div>
+          <button class="button button-primary" type="submit">Send Message <span aria-hidden="true">↗</span></button>
+          <p class="form-status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <a class="brand" href="#home">
+        <span class="brand-mark" aria-hidden="true">FM</span>
+        <span>Faiza Muneeb</span>
+      </a>
+      <p>© 2026 Faiza Muneeb. All rights reserved.</p>
+      <a class="back-to-top" href="#home">Back to top ↑</a>
+    </div>
+  </footer>
+</body>
+</html>
