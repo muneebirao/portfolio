@@ -50,6 +50,7 @@ body{
   gap:8px;
   margin:10px 0;
 }
+.hiddenField{display:none}
 label{font-weight:700;font-size:14px}
 input,select{
   height:36px;
@@ -58,9 +59,10 @@ input,select{
   padding:0 9px;
   font-size:15px;
 }
+.buttonRow{display:flex;gap:10px;margin-top:14px}
+.buttonRow button{flex:1}
 button{
   width:100%;
-  margin-top:14px;
   height:42px;
   border:0;
   border-radius:8px;
@@ -70,6 +72,7 @@ button{
   font-size:15px;
   cursor:pointer;
 }
+button.secondary{background:#64748b}
 .main{padding:14px}
 .visual{
   border-radius:8px;
@@ -143,6 +146,8 @@ th{background:var(--navy);color:white;padding:9px;text-align:left}
 td{border:1px solid #d9dfeb;padding:8px}
 tfoot td{font-weight:900;background:#fff4c7}
 .ok{margin-top:12px;background:#e8f8e9;color:#16621c;padding:12px;text-align:center;border-radius:8px;font-weight:900}
+.empty{padding:26px;text-align:center;background:#f8fafc;color:#475569;font-weight:800}
+.author{margin-top:16px;text-align:center;color:#64748b;font-size:13px;font-weight:600}
 @media(max-width:900px){
   .app{grid-template-columns:1fr}
 }
@@ -159,9 +164,9 @@ tfoot td{font-weight:900;background:#fff4c7}
       <h2>INPUTS</h2>
       <div class="field"><label>Total Amount ($)</label><input id="total" type="number" value="120000"></div>
       <div class="field"><label>Deceased</label><select id="sex"><option selected>Male</option><option>Female</option></select></div>
-      <div class="field"><label>Nisa (0–3)</label><input id="nisa" type="number" min="0" max="3" value="0"></div>
-      <div class="field"><label>Wife/Zaujah (0–1)</label><input id="wife" type="number" min="0" max="1" value="1"></div>
-      <div class="field"><label>Husband/Zauj (0–1)</label><input id="husband" type="number" min="0" max="1" value="0"></div>
+      <div class="field"><label id="nisaLabel">Nisa (0–4)</label><input id="nisa" type="number" min="0" max="4" value="0"></div>
+      <div class="field" id="wifeRow"><label>Wife/Zaujah (0–1)</label><input id="wife" type="number" min="0" max="1" value="1"></div>
+      <div class="field" id="husbandRow"><label>Husband/Zauj (0–1)</label><input id="husband" type="number" min="0" max="1" value="0"></div>
       <div class="field"><label>Father (0–1)</label><input id="father" type="number" min="0" max="1" value="1"></div>
       <div class="field"><label>Grandfather (0–1)</label><input id="grandfather" type="number" min="0" max="1" value="0"></div>
       <div class="field"><label>Sons (0–5)</label><input id="sons" type="number" min="0" max="5" value="0"></div>
@@ -169,7 +174,10 @@ tfoot td{font-weight:900;background:#fff4c7}
       <div class="field"><label>Mother (0–1)</label><input id="mother" type="number" min="0" max="1" value="1"></div>
       <div class="field"><label>Brothers (0–5)</label><input id="brothers" type="number" min="0" max="5" value="0"></div>
       <div class="field"><label>Sisters (0–5)</label><input id="sisters" type="number" min="0" max="5" value="0"></div>
-      <button onclick="render()">CALCULATE</button>
+      <div class="buttonRow">
+        <button type="button" onclick="render()">CALCULATE</button>
+        <button class="secondary" type="button" onclick="resetDefaults()">RESET</button>
+      </div>
     </div>
   </aside>
 
@@ -188,6 +196,7 @@ tfoot td{font-weight:900;background:#fff4c7}
       </table>
     </div>
     <div class="ok" id="status"></div>
+  <div class="author">Author: <strong>Muneeb Rao</strong></div>
   </main>
 </div>
 
@@ -196,22 +205,52 @@ const $ = id => document.getElementById(id);
 const money = n => "$" + Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
 const pct = n => (n*100).toFixed(2)+"%";
 const gcd = (a,b)=> b ? gcd(b,a%b) : Math.abs(a);
+
 function fracFromDecimal(x){
   if (Math.abs(x) < 1e-10) return "0";
-  const den = 108000; // enough for these rule fractions
+  const den = 108000;
   const num = Math.round(x*den);
   const g = gcd(num,den);
   return (num/g)+"/"+(den/g);
 }
 function val(id){return Math.max(0, parseInt($(id).value || "0",10));}
-function clampInputs(){
-  const limits = {nisa:3,wife:1,husband:1,father:1,grandfather:1,sons:5,daughters:5,mother:1,brothers:5,sisters:5};
-  for(const [id,max] of Object.entries(limits)){
-    let v = val(id); if(v>max)v=max; $(id).value=v;
+
+function syncGenderRules(){
+  const female = $("sex").value === "Female";
+  const nisaMax = female ? 2 : 4;
+
+  $("nisa").max = nisaMax;
+  $("nisaLabel").textContent = female ? "Nisa (0–2)" : "Nisa (0–4)";
+
+  $("wifeRow").classList.toggle("hiddenField", female);
+  $("husbandRow").classList.toggle("hiddenField", !female);
+
+  if(female){
+    $("wife").value = 0;
+  } else {
+    $("husband").value = 0;
   }
-  if(val("wife")>0){$("husband").value=0;}
-  if(val("husband")>0){$("wife").value=0;}
 }
+
+function clampInputs(){
+  syncGenderRules();
+
+  const nisaMax = $("sex").value === "Female" ? 2 : 4;
+  const limits = {nisa:nisaMax,wife:1,husband:1,father:1,grandfather:1,sons:5,daughters:5,mother:1,brothers:5,sisters:5};
+
+  for(const [id,max] of Object.entries(limits)){
+    let v = val(id);
+    if(v > max) v = max;
+    $(id).value = v;
+  }
+
+  if($("sex").value === "Male"){
+    $("husband").value = 0;
+  } else {
+    $("wife").value = 0;
+  }
+}
+
 function calc(){
   clampInputs();
   const total = Number($("total").value || 0);
@@ -226,6 +265,8 @@ function calc(){
   if(nisa===1){nisaShare=0.5; nisaFrac="1/2";}
   if(nisa===2){nisaShare=0.5; nisaFrac="1/2";}
   if(nisa===3){nisaShare=2/3; nisaFrac="2/3";}
+  if(nisa===4){nisaShare=2/3; nisaFrac="2/3";}
+
   if(nisa>0){
     rows.push({name:"Nisa (All)", frac:nisaFrac, share:nisaShare, amt:nisaShare*total, note:"Total Nisa share"});
     const each=nisaShare/nisa;
@@ -236,7 +277,6 @@ function calc(){
   let husbandShare = husband ? (hasChildren ? 1/4 : 1/2) : 0;
   const leftover = total - (nisaShare*total + wifeShare*total + husbandShare*total);
 
-  // mother/sibling block share
   let msPool = (mother || hasSiblings) ? leftover/3 : 0;
   let fgChildrenPool = leftover - msPool;
 
@@ -288,8 +328,48 @@ function calc(){
   if(wife) rows.push({name:"Wife (Zaujah)", frac:fracFromDecimal(wifeShare), share:wifeShare, amt:wifeShare*total, note:hasChildren ? "Children present → 1/8" : "No children → 1/4"});
   if(husband) rows.push({name:"Husband (Zauj)", frac:fracFromDecimal(husbandShare), share:husbandShare, amt:husbandShare*total, note:hasChildren ? "Children present → 1/4" : "No children → 1/2"});
 
-  return {total, rows, nisa, wife, husband, father, grandfather, sons, daughters, mother, brothers, sisters, nisaShare, leftover, msPool, fgChildrenPool};
+  const presentCount = nisa + wife + husband + father + grandfather + sons + daughters + mother + brothers + sisters;
+  if (presentCount === 1) {
+    const only = rows.find(r => !r.name.includes("(All)"));
+    if (only) {
+      rows = [{name: only.name, frac: "1/1", share: 1, amt: total, note: "Only person present → receives 100% of TotalAmount"}];
+    }
+  }
+
+  if (presentCount > 1 && nisa > 0) {
+    const assignedWithoutGroupRows = rows
+      .filter(r => !r.name.includes("(All)"))
+      .reduce((s, r) => s + r.amt, 0);
+
+    const residual = total - assignedWithoutGroupRows;
+
+    if (residual > 0.009) {
+      const eachResidual = residual / nisa;
+
+      for (let i = 1; i <= nisa; i++) {
+        const r = rows.find(x => x.name === "Nisa " + i);
+        if (r) {
+          r.amt += eachResidual;
+          r.share = r.amt / total;
+          r.frac = fracFromDecimal(r.share);
+          r.note = "Original Nisa share + equal share of remaining unassigned amount";
+        }
+      }
+
+      const group = rows.find(x => x.name === "Nisa (All)");
+      if (group) {
+        const nisaRows = rows.filter(x => x.name.startsWith("Nisa ") && !x.name.includes("(All)"));
+        group.amt = nisaRows.reduce((s, x) => s + x.amt, 0);
+        group.share = group.amt / total;
+        group.frac = fracFromDecimal(group.share);
+        group.note = "Total Nisa share after receiving remaining unassigned amount";
+      }
+    }
+  }
+
+  return {total, rows, nisa, wife, husband, father, grandfather, sons, daughters, mother, brothers, sisters};
 }
+
 function rowHtml(title, frac, share, amount, cls){
   return `<div class="group-title ${cls}"><div>${title}</div><div class="small">${frac} = ${pct(share)} • ${money(amount)}</div></div>`;
 }
@@ -302,9 +382,10 @@ function render(){
   let html="";
 
   if(d.nisa>0){
-    html += rowHtml("Nisa", d.rows[0].frac, d.rows[0].share, d.rows[0].amt, "nisaTitle");
+    const group = d.rows.find(r=>r.name==="Nisa (All)");
+    html += rowHtml("Nisa", group.frac, group.share, group.amt, "nisaTitle");
     html += `<div class="people nisaPeople" style="grid-template-columns:repeat(${d.nisa},1fr)">`;
-    for(let i=1;i<=d.nisa;i++){ const r=find("Nisa "+i); html+=personHtml(r.name,r.frac,r.share,r.amt,"nisaPerson"); }
+    for(let i=1;i<=d.nisa;i++){ const r=find("Nisa "+i); if(r) html+=personHtml(r.name,r.frac,r.share,r.amt,"nisaPerson"); }
     html += `</div>`;
   }
 
@@ -330,6 +411,7 @@ function render(){
   const daughterRows = d.rows.filter(r=>r.name.startsWith("Daughter "));
   if(sonRows.length || daughterRows.length){
     html += `<div class="childrenRow">`;
+
     html += `<div class="childBlock">`;
     const sa = sonRows.reduce((s,r)=>s+r.amt,0), ss=d.total?sa/d.total:0;
     html += `<div class="childTitle sonTitle"><div>Sons</div><div class="small">${fracFromDecimal(ss)} = ${pct(ss)} • ${money(sa)}</div></div>`;
@@ -349,15 +431,48 @@ function render(){
 
   const z = d.rows.find(r=>r.name.includes("Zauj"));
   if(z) html += rowHtml(z.name, z.frac, z.share, z.amt, "zaujTitle");
+  if(!html) html = `<div class="empty">No recipients selected.</div>`;
 
   $("visual").innerHTML = html;
 
   $("tbody").innerHTML = d.rows.map(r=>`<tr><td>${r.name}</td><td>${r.frac}</td><td>${pct(r.share)}</td><td>${money(r.amt)}</td><td>${r.note}</td></tr>`).join("");
   const sum = d.rows.filter(r=>!r.name.includes("(All)")).reduce((s,r)=>s+r.amt,0);
-  $("totalPct").textContent = pct(sum/d.total);
+  $("totalPct").textContent = d.total ? pct(sum/d.total) : "0.00%";
   $("totalAmt").textContent = money(sum);
-  $("status").textContent = "Total shown: " + pct(sum/d.total) + " of Total Amount";
+
+  const diff = d.total - sum;
+  const status = $("status");
+  if (Math.abs(diff) < 0.01) {
+    status.style.background = "#e8f8e9";
+    status.style.color = "#16621c";
+    status.textContent = "✓ Shares balance correctly. Total shown: " + (d.total ? pct(sum/d.total) : "0.00%");
+  } else if (diff > 0.01) {
+    status.style.background = "#fff3cd";
+    status.style.color = "#8a5a00";
+    status.textContent = "⚠ WARNING: Unallocated amount remaining: " + money(diff) + " (" + (d.total ? pct(diff/d.total) : "0.00%") + ")";
+  } else {
+    status.style.background = "#fde2e2";
+    status.style.color = "#b00020";
+    status.textContent = "❌ ERROR: Shares exceed Total Amount by " + money(-diff) + " (" + (d.total ? pct((-diff)/d.total) : "0.00%") + ")";
+  }
 }
+
+function resetDefaults(){
+  $("total").value=120000;
+  $("sex").value="Male";
+  $("nisa").value=0;
+  $("wife").value=1;
+  $("husband").value=0;
+  $("father").value=1;
+  $("grandfather").value=0;
+  $("sons").value=0;
+  $("daughters").value=3;
+  $("mother").value=1;
+  $("brothers").value=0;
+  $("sisters").value=0;
+  render();
+}
+
 document.querySelectorAll("input,select").forEach(el=>el.addEventListener("change",render));
 render();
 </script>
