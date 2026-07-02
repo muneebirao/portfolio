@@ -1,391 +1,365 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Faiza Muneeb's social media marketing and pastry arts portfolio.">
-  <title>Faiza Muneeb – Social Media Marketing Portfolio</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Italiana&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Inheritance Share Calculator</title>
 <style>
-  .article-card {
-    display: block;
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    border-radius: 16px;
-    text-decoration: none;
-    transition: transform 0.3s ease;
+:root{
+  --navy:#061b49;
+  --purple:#8a00e6;
+  --orange:#ff9900;
+  --green:#238323;
+  --son:#0066cc;
+  --daughter:#f01878;
+  --zauj:#003f9e;
+  --bg:#f3f6fb;
+  --border:#ffffff;
 }
-
-.article-card:hover {
-    transform: translateY(-4px);
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  font-family:Arial, Helvetica, sans-serif;
+  color:#07173d;
 }
-
-.article-card img {
-    width: 100%;
-    height: 280px;
-    object-fit: cover;
-    display: block;
+.app{
+  max-width:1280px;
+  margin:18px auto;
+  display:grid;
+  grid-template-columns:310px 1fr;
+  gap:18px;
+  padding:0 14px;
 }
-
-.article-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        to top,
-        rgba(0,0,0,0.8),
-        rgba(0,0,0,0.2)
-    );
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 20px;
+.card{
+  background:#fff;
+  border:1px solid #dfe5ef;
+  border-radius:12px;
+  box-shadow:0 6px 20px rgba(0,0,0,.06);
 }
-
-.article-type {
-    font-size: 0.85rem;
-    opacity: 0.9;
+.brand{padding:18px}
+.brand h1{font-size:25px;line-height:1.1;margin:0 0 8px;color:var(--navy)}
+.brand p{margin:0;line-height:1.35;color:#24304f}
+.panel{padding:16px;margin-top:14px}
+.panel h2,.main h2{font-size:16px;margin:0 0 12px;color:var(--navy);letter-spacing:.2px}
+.field{
+  display:grid;
+  grid-template-columns:1fr 86px;
+  align-items:center;
+  gap:8px;
+  margin:10px 0;
 }
-
-.article-overlay h4 {
-    margin: 6px 0;
+label{font-weight:700;font-size:14px}
+input,select{
+  height:36px;
+  border:1px solid #cfd7e5;
+  border-radius:8px;
+  padding:0 9px;
+  font-size:15px;
 }
-
-.article-overlay p {
-    margin: 0;
-    font-size: 0.9rem;
+button{
+  width:100%;
+  margin-top:14px;
+  height:42px;
+  border:0;
+  border-radius:8px;
+  background:#075ce6;
+  color:white;
+  font-weight:800;
+  font-size:15px;
+  cursor:pointer;
+}
+.main{padding:14px}
+.visual{
+  border-radius:8px;
+  overflow:hidden;
+  border:1px solid #d8dfeb;
+}
+.group-title{
+  min-height:64px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-weight:900;
+  text-align:center;
+  border-bottom:2px solid var(--border);
+  padding:8px 12px;
+  font-size:20px;
+  line-height:1.25;
+}
+.group-title .small{font-size:17px;font-weight:800}
+.people{
+  display:grid;
+  min-height:82px;
+}
+.person{
+  color:#fff;
+  font-weight:800;
+  text-align:center;
+  border-right:2px solid var(--border);
+  border-bottom:2px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  padding:8px 5px;
+  line-height:1.22;
+  min-height:76px;
+}
+.person:last-child{border-right:0}
+.person .name{font-size:16px}
+.person .line{font-size:14px}
+.nisaTitle,.nisaPerson{background:linear-gradient(135deg,#7c00d8,#a900ff)}
+.msTitle,.msPerson{background:linear-gradient(135deg,#ef8c00,#ffae00)}
+.fgTitle,.fgPerson{background:linear-gradient(135deg,#1d741d,#349934)}
+.sonTitle,.sonPerson{background:linear-gradient(135deg,#0059bd,#0878e8)}
+.daughterTitle,.daughterPerson{background:linear-gradient(135deg,#dd0f66,#ff318b)}
+.zaujTitle{background:linear-gradient(135deg,#003b94,#006ce6);border-bottom:0}
+.childrenRow{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+.childBlock{border-bottom:2px solid var(--border)}
+.childBlock:first-child{border-right:2px solid var(--border)}
+.childTitle{
+  min-height:64px;
+  color:#fff;
+  font-weight:900;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  border-bottom:2px solid var(--border);
+  font-size:20px;
+  line-height:1.25;
+}
+.tableWrap{margin-top:16px;overflow:auto}
+table{width:100%;border-collapse:collapse;background:#fff;font-size:14px}
+th{background:var(--navy);color:white;padding:9px;text-align:left}
+td{border:1px solid #d9dfeb;padding:8px}
+tfoot td{font-weight:900;background:#fff4c7}
+.ok{margin-top:12px;background:#e8f8e9;color:#16621c;padding:12px;text-align:center;border-radius:8px;font-weight:900}
+@media(max-width:900px){
+  .app{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
-  <a class="skip-link" href="#main-content">Skip to content</a>
-
-  <header class="site-header" id="home">
-    <nav class="nav container" aria-label="Main navigation">
-      <a class="brand" href="#home" aria-label="Faiza Muneeb home">
-        <span class="brand-mark" aria-hidden="true">FM</span>
-        <span>Faiza Muneeb</span>
-      </a>
-
-      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open navigation menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-
-      <ul class="nav-links" id="nav-links">
-        <li><a class="active" href="#home">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#portfolio">Portfolio</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#testimonial">Testimonial</a></li>
-        <li><a href="#resume">Resume</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main id="main-content">
-    <section class="hero section">
-      <div class="hero-bloom bloom-one" aria-hidden="true"></div>
-      <div class="hero-bloom bloom-two" aria-hidden="true"></div>
-      <div class="container hero-grid">
-        <div class="hero-copy reveal">
-          <p class="eyebrow">Pastry artistry meets digital storytelling</p>
-          <h1>Faiza <em>Muneeb</em></h1>
-          <p class="hero-tagline">Certified Pastry Chef <span>•</span> Social Media Marketing Student <span>•</span> Content Creator</p>
-          <p class="hero-intro">Creating beautiful edible art and engaging digital content through creativity, craftsmanship, and storytelling.</p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#portfolio">View Portfolio <span aria-hidden="true">↗</span></a>
-            <a class="button button-secondary" href="#contact">Contact Me</a>
-          </div>
-          <div class="hero-notes" aria-label="Areas of expertise">
-            <span>Floral desserts</span>
-            <span>Visual content</span>
-            <span>Brand stories</span>
-          </div>
-        </div>
-
-        <div class="hero-art reveal" aria-label="Decorative portfolio image placeholder">
-          <div class="art-frame">
-            <!-- Replace this placeholder with a real portrait or pastry image:
-                 <img src="images/faiza-hero.jpg" alt="Faiza Muneeb with a floral cupcake bouquet"> -->
-            <div class="media-placeholder hero-placeholder">
-              <div class="line-art" aria-hidden="true">
-                <span class="cake-base"></span>
-                <span class="flower flower-one">✿</span>
-                <span class="flower flower-two">❀</span>
-                <span class="flower flower-three">✿</span>
-                <span class="stem stem-one"></span>
-                <span class="stem stem-two"></span>
-              </div>
-              <p>Featured pastry or portrait</p>
-              <small>Replace with your image</small>
-            </div>
-          </div>
-          <div class="floating-card floating-card-top">
-            <span>✦</span>
-            <p>Certified<br><strong>Pastry Chef</strong></p>
-          </div>
-          <div class="floating-card floating-card-bottom">
-            <strong>Creative</strong>
-            <span>with intention</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="about section" id="about">
-      <div class="container about-grid">
-        <div class="section-heading reveal">
-          <p class="eyebrow">Get to know me</p>
-          <h2>A blend of artistry, strategy, and a little buttercream.</h2>
-          <div class="signature" aria-hidden="true">Faiza</div>
-        </div>
-        <div class="about-copy reveal">
-          <p class="lead">Hello, my name is Faiza Muneeb. I am a Certified Pastry Chef and Social Media Marketing student with a passion for creativity, baking, and digital storytelling.</p>
-          <p>I specialize in floral cupcake bouquets, custom royal icing cookies, and visually appealing dessert creations that combine artistry with craftsmanship.</p>
-          <p>In addition to baking, I enjoy creating content that educates, inspires, and connects with audiences. Through my studies and creative projects, I have developed skills in social media marketing, content creation, digital advertising, graphic design, and audience engagement.</p>
-          <p>My goal is to combine my creative talents with modern marketing strategies to help brands and businesses share their stories effectively.</p>
-          <div class="about-stats">
-            <div><strong>13</strong><span>Creative skills</span></div>
-            <div><strong>05</strong><span>Featured projects</span></div>
-            <div><strong>02</strong><span>Creative disciplines</span></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="portfolio section" id="portfolio">
-      <div class="container">
-        <div class="portfolio-heading reveal">
-          <div>
-            <p class="eyebrow">Selected work</p>
-            <h2>Stories made to be seen, shared, and savored.</h2>
-          </div>
-          <p>A collection of content, campaigns, and creative projects combining thoughtful strategy with strong visual storytelling.</p>
-        </div>
-
-        <div class="project-grid">
-          <article class="project-card project-featured reveal">
-            <div class="project-media media-pink">
-              <!-- Replace with a YouTube thumbnail or embedded video. -->
-              <div class="media-placeholder">
-    <iframe
-        
-        src="https://www.youtube.com/embed/L7WqMNbvPLc"
-        title="How a Cupcake Bouquet is Made"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen>
-    </iframe>
-</div>
-            </div>
-            <div class="project-content">
-              <p class="project-category">YouTube Video Content</p>
-              <h3>How a Cupcake Bouquet is Made</h3>
-              <p>An educational video demonstrating the process of designing and decorating a floral cupcake bouquet from start to finish.</p>
-              <span class="project-link">View project <span aria-hidden="true">↗</span></span>
-            </div>
-          </article>
-
-          <article class="project-card reveal">
-            <div class="project-media media-lavender">
-              <!-- Replace with a blog article screenshot or cover image. -->
-              <a href="https://cupflora.blogspot.com/2026/03/how-cupcake-bouquet-is-made.html"
-   target="_blank"
-   class="article-card">
-
-    <img src="images/cupcake-bouquet-article-thumbnail.jpg"
-         alt="How a Cupcake Bouquet is Made">
-
-    <div class="article-overlay">
-        <span class="article-type">Blog Article</span>
-        <h4>How a Cupcake Bouquet is Made</h4>
-        <p>Click to read article</p>
+<div class="app">
+  <aside>
+    <div class="card brand">
+      <h1>Inheritance<br>Share Calculator</h1>
+      <p>Readable visual layout with fractions, percentages, and dollar amounts.</p>
     </div>
+    <div class="card panel">
+      <h2>INPUTS</h2>
+      <div class="field"><label>Total Amount ($)</label><input id="total" type="number" value="120000"></div>
+      <div class="field"><label>Deceased</label><select id="sex"><option selected>Male</option><option>Female</option></select></div>
+      <div class="field"><label>Nisa (0–3)</label><input id="nisa" type="number" min="0" max="3" value="0"></div>
+      <div class="field"><label>Wife/Zaujah (0–1)</label><input id="wife" type="number" min="0" max="1" value="1"></div>
+      <div class="field"><label>Husband/Zauj (0–1)</label><input id="husband" type="number" min="0" max="1" value="0"></div>
+      <div class="field"><label>Father (0–1)</label><input id="father" type="number" min="0" max="1" value="1"></div>
+      <div class="field"><label>Grandfather (0–1)</label><input id="grandfather" type="number" min="0" max="1" value="0"></div>
+      <div class="field"><label>Sons (0–5)</label><input id="sons" type="number" min="0" max="5" value="0"></div>
+      <div class="field"><label>Daughters (0–5)</label><input id="daughters" type="number" min="0" max="5" value="3"></div>
+      <div class="field"><label>Mother (0–1)</label><input id="mother" type="number" min="0" max="1" value="1"></div>
+      <div class="field"><label>Brothers (0–5)</label><input id="brothers" type="number" min="0" max="5" value="0"></div>
+      <div class="field"><label>Sisters (0–5)</label><input id="sisters" type="number" min="0" max="5" value="0"></div>
+      <button onclick="render()">CALCULATE</button>
+    </div>
+  </aside>
 
-</a>
-            </div>
-            <div class="project-content">
-              <p class="project-category">Blog Article / Content Marketing</p>
-              <h3>How a Cupcake Bouquet is Made</h3>
-              <p>A written content piece explaining the tools, techniques, and creative process involved in making cupcake bouquets.</p>
-              <span class="project-link">View project <span aria-hidden="true">↗</span></span>
-            </div>
-          </article>
+  <main class="card main">
+    <h2>VISUAL SHARE — fixed readable layout</h2>
+    <div id="visual" class="visual"></div>
 
-          <article class="project-card reveal">
-            <div class="project-media media-cream">
-              <!-- Replace with the completed Facebook advertisement image. -->
-              <div class="media-placeholder">
-    <img src="images/facebook-ad.png"
-         alt="Cupcake Cookie Bouquet Facebook Advertisement"
-         class="portfolio-image">
-</div>
-            </div>
-            <div class="project-content">
-              <p class="project-category">Graphic Design / Facebook Advertising</p>
-              <h3>Cupcake Cookie Bouquet Facebook Advertisement</h3>
-              <p>A promotional Facebook ad designed to showcase a custom cupcake cookie bouquet and attract potential customers.</p>
-              <span class="project-link">View project <span aria-hidden="true">↗</span></span>
-            </div>
-          </article>
-
-          <article class="project-card reveal">
-            <div class="project-media media-purple">
-              <!-- Replace with an Instagram Reel cover or embedded video. -->
-              <div class="media-placeholder">
-    <img src="images/instagram-reel.jpg"
-         alt="Cupcake Cookie Bouquet Facebook Advertisement"
-         class="portfolio-image">
-</div>
-            </div>
-            <div class="project-content">
-              <p class="project-category">Short-Form Video Content</p>
-              <h3>Cupcake Bouquet Instagram Reel</h3>
-              <p>A short-form video created to engage audiences and highlight the beauty and craftsmanship of floral cupcake bouquets.</p>
-              <span class="project-link">View project <span aria-hidden="true">↗</span></span>
-            </div>
-          </article>
-
-          <article class="project-card project-wide reveal">
-            <div class="project-media media-gold">
-              <!-- Replace with the completed SD Catering advertisement image. -->
-              <div class="media-placeholder">
-    <img src="images/paratha.png"
-         alt="Cupcake Cookie Bouquet Facebook Advertisement"
-         class="portfolio-image">
-</div>
-            </div>
-            <div class="project-content">
-              <p class="project-category">Digital Advertising</p>
-              <h3>SD Catering Lacha Paratha Advertisement</h3>
-              <p>A social media advertisement created to promote freshly prepared lacha parathas and increase awareness of SD Catering services.</p>
-              <span class="project-link">View project <span aria-hidden="true">↗</span></span>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="skills section" id="skills">
-      <div class="container skills-grid">
-        <div class="section-heading reveal">
-          <p class="eyebrow">What I bring</p>
-          <h2>Creative hands.<br>Strategic mind.</h2>
-          <p class="section-description">From the first idea to the final post, I bring together content, design, and detail.</p>
-        </div>
-        <div class="skill-list reveal" aria-label="Skills">
-          <span>Social Media Marketing</span>
-          <span>Content Creation</span>
-          <span>Digital Advertising</span>
-          <span>Graphic Design</span>
-          <span>Video Editing</span>
-          <span>Canva Design</span>
-          <span>Copywriting</span>
-          <span>Content Strategy</span>
-          <span>Audience Engagement</span>
-          <span>Baking &amp; Pastry Arts</span>
-          <span>Cupcake Bouquet Design</span>
-          <span>Royal Icing Cookie Decorating</span>
-          <span>Brand Storytelling</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="testimonial section" id="testimonial">
-      <div class="container">
-        <div class="testimonial-card reveal">
-          <div class="quote-mark" aria-hidden="true">“</div>
-          <blockquote>
-            <p>Faiza demonstrates creativity, attention to detail, and strong visual communication skills through her baking and digital content projects.</p>
-            <footer>
-              <span class="avatar" aria-hidden="true">F</span>
-              <div>
-                <strong>Portfolio Feedback</strong>
-                <span>Academic testimonial placeholder</span>
-              </div>
-            </footer>
-          </blockquote>
-          <div class="testimonial-flower" aria-hidden="true">✿</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="resume section" id="resume">
-      <div class="container resume-card reveal">
-        <div>
-          <p class="eyebrow">Experience &amp; education</p>
-          <h2>The details behind the work.</h2>
-        </div>
-        <div class="resume-action">
-          <p>Download my resume to learn more about my education, skills, and professional background.</p>
-          <!-- Place resume.pdf in the same folder as index.html. -->
-          <a class="button button-primary" href="resume.pdf" download>Download Resume <span aria-hidden="true">↓</span></a>
-        </div>
-      </div>
-    </section>
-
-    <section class="contact section" id="contact">
-      <div class="container contact-grid">
-        <div class="contact-intro reveal">
-          <p class="eyebrow">Let's connect</p>
-          <h2>Have a sweet idea in mind?</h2>
-          <p>Whether you want to talk content, collaborate on a creative project, or simply say hello, I would love to hear from you.</p>
-          <ul class="contact-links">
-            <li>
-              <span>Email</span>
-              <a href="mailto:faiza.email@example.com">faiza.email@example.com</a>
-            </li>
-            <li>
-              <span>LinkedIn</span>
-              <a href="https://linkedin.com/in/faizamuneeb" target="_blank" rel="noopener noreferrer">linkedin.com/in/faizamuneeb</a>
-            </li>
-            <li>
-              <span>Instagram</span>
-              <a href="https://instagram.com/faizamuneeb" target="_blank" rel="noopener noreferrer">@faizamuneeb</a>
-            </li>
-          </ul>
-          <small class="update-note">Contact details are placeholders and can be updated later.</small>
-        </div>
-
-        <form class="contact-form reveal" id="contact-form">
-          <div class="form-row">
-            <div class="field">
-              <label for="name">Your name</label>
-              <input type="text" id="name" name="name" placeholder="Jane Smith" required>
-            </div>
-            <div class="field">
-              <label for="email">Email address</label>
-              <input type="email" id="email" name="email" placeholder="jane@example.com" required>
-            </div>
-          </div>
-          <div class="field">
-            <label for="message">Your message</label>
-            <textarea id="message" name="message" rows="6" placeholder="Tell me a little about your idea..." required></textarea>
-          </div>
-          <button class="button button-primary" type="submit">Send Message <span aria-hidden="true">↗</span></button>
-          <p class="form-status" aria-live="polite"></p>
-        </form>
-      </div>
-    </section>
+    <div class="tableWrap">
+      <h2>NUMERICAL RESULT</h2>
+      <table>
+        <thead>
+          <tr><th>Category / Person</th><th>Fraction</th><th>% of Total</th><th>Amount ($)</th><th>Note</th></tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+        <tfoot><tr><td>TOTAL</td><td>1/1</td><td id="totalPct"></td><td id="totalAmt"></td><td>Total displayed</td></tr></tfoot>
+      </table>
+    </div>
+    <div class="ok" id="status"></div>
   </main>
+</div>
 
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <a class="brand" href="#home">
-        <span class="brand-mark" aria-hidden="true">FM</span>
-        <span>Faiza Muneeb</span>
-      </a>
-      <p>© 2026 Faiza Muneeb. All rights reserved.</p>
-      <a class="back-to-top" href="#home">Back to top ↑</a>
-    </div>
-  </footer>
+<script>
+const $ = id => document.getElementById(id);
+const money = n => "$" + Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+const pct = n => (n*100).toFixed(2)+"%";
+const gcd = (a,b)=> b ? gcd(b,a%b) : Math.abs(a);
+function fracFromDecimal(x){
+  if (Math.abs(x) < 1e-10) return "0";
+  const den = 108000; // enough for these rule fractions
+  const num = Math.round(x*den);
+  const g = gcd(num,den);
+  return (num/g)+"/"+(den/g);
+}
+function val(id){return Math.max(0, parseInt($(id).value || "0",10));}
+function clampInputs(){
+  const limits = {nisa:3,wife:1,husband:1,father:1,grandfather:1,sons:5,daughters:5,mother:1,brothers:5,sisters:5};
+  for(const [id,max] of Object.entries(limits)){
+    let v = val(id); if(v>max)v=max; $(id).value=v;
+  }
+  if(val("wife")>0){$("husband").value=0;}
+  if(val("husband")>0){$("wife").value=0;}
+}
+function calc(){
+  clampInputs();
+  const total = Number($("total").value || 0);
+  const nisa=val("nisa"), wife=val("wife"), husband=val("husband"), father=val("father"), grandfather=val("grandfather");
+  const sons=val("sons"), daughters=val("daughters"), mother=val("mother"), brothers=val("brothers"), sisters=val("sisters");
+  const hasChildren = sons+daughters>0;
+  const hasSiblings = brothers+sisters>0;
+
+  let rows=[];
+
+  let nisaShare=0, nisaFrac="0";
+  if(nisa===1){nisaShare=0.5; nisaFrac="1/2";}
+  if(nisa===2){nisaShare=0.5; nisaFrac="1/2";}
+  if(nisa===3){nisaShare=2/3; nisaFrac="2/3";}
+  if(nisa>0){
+    rows.push({name:"Nisa (All)", frac:nisaFrac, share:nisaShare, amt:nisaShare*total, note:"Total Nisa share"});
+    const each=nisaShare/nisa;
+    for(let i=1;i<=nisa;i++) rows.push({name:"Nisa "+i, frac:fracFromDecimal(each), share:each, amt:each*total, note:"Individual Nisa share"});
+  }
+
+  let wifeShare = wife ? (hasChildren ? 1/8 : 1/4) : 0;
+  let husbandShare = husband ? (hasChildren ? 1/4 : 1/2) : 0;
+  const leftover = total - (nisaShare*total + wifeShare*total + husbandShare*total);
+
+  // mother/sibling block share
+  let msPool = (mother || hasSiblings) ? leftover/3 : 0;
+  let fgChildrenPool = leftover - msPool;
+
+  if(father+grandfather+sons+daughters===0 && msPool>0){
+    msPool = leftover;
+    fgChildrenPool = 0;
+  }
+  if(mother+brothers+sisters===0 && fgChildrenPool>0){
+    fgChildrenPool = leftover;
+    msPool = 0;
+  }
+
+  if(mother){
+    const mAmt = hasSiblings ? leftover/6 : msPool;
+    rows.push({name:"Mother", frac:fracFromDecimal(mAmt/total), share:mAmt/total, amt:mAmt, note:hasSiblings ? "Mother gets 1/6 of LeftOverAmount" : "Mother receives Mother+Siblings portion"});
+    const sibPool = msPool - mAmt;
+    const sibCount = brothers+sisters;
+    if(sibCount>0){
+      const each=sibPool/sibCount;
+      for(let i=1;i<=brothers;i++) rows.push({name:"Brother "+i, frac:fracFromDecimal(each/total), share:each/total, amt:each, note:"Siblings share equally"});
+      for(let i=1;i<=sisters;i++) rows.push({name:"Sister "+i, frac:fracFromDecimal(each/total), share:each/total, amt:each, note:"Siblings share equally"});
+    }
+  } else if(hasSiblings){
+    const each=msPool/(brothers+sisters);
+    for(let i=1;i<=brothers;i++) rows.push({name:"Brother "+i, frac:fracFromDecimal(each/total), share:each/total, amt:each, note:"Mother absent; siblings share Mother+Siblings portion"});
+    for(let i=1;i<=sisters;i++) rows.push({name:"Sister "+i, frac:fracFromDecimal(each/total), share:each/total, amt:each, note:"Mother absent; siblings share Mother+Siblings portion"});
+  }
+
+  let parentFixed = 0;
+  if(hasChildren){
+    if(father){const a=leftover/6; parentFixed+=a; rows.push({name:"Father", frac:fracFromDecimal(a/total), share:a/total, amt:a, note:"Child present → 1/6 of LeftOverAmount"});}
+    if(grandfather){const a=leftover/6; parentFixed+=a; rows.push({name:"Grandfather", frac:fracFromDecimal(a/total), share:a/total, amt:a, note:"Child present → 1/6 of LeftOverAmount"});}
+    let childPool = Math.max(0, fgChildrenPool - parentFixed);
+    const units = sons*2 + daughters;
+    if(units>0){
+      const unit = childPool/units;
+      for(let i=1;i<=sons;i++) rows.push({name:"Son "+i, frac:fracFromDecimal((unit*2)/total), share:(unit*2)/total, amt:unit*2, note:"Son share = 2 × daughter share"});
+      for(let i=1;i<=daughters;i++) rows.push({name:"Daughter "+i, frac:fracFromDecimal(unit/total), share:unit/total, amt:unit, note:"Daughter share"});
+    }
+  } else {
+    const count=father+grandfather;
+    if(count>0){
+      const each=fgChildrenPool/count;
+      if(father) rows.push({name:"Father", frac:fracFromDecimal(each/total), share:each/total, amt:each, note:"No children; shares Father+Grandfather portion"});
+      if(grandfather) rows.push({name:"Grandfather", frac:fracFromDecimal(each/total), share:each/total, amt:each, note:"No children; shares Father+Grandfather portion"});
+    }
+  }
+
+  if(wife) rows.push({name:"Wife (Zaujah)", frac:fracFromDecimal(wifeShare), share:wifeShare, amt:wifeShare*total, note:hasChildren ? "Children present → 1/8" : "No children → 1/4"});
+  if(husband) rows.push({name:"Husband (Zauj)", frac:fracFromDecimal(husbandShare), share:husbandShare, amt:husbandShare*total, note:hasChildren ? "Children present → 1/4" : "No children → 1/2"});
+
+  return {total, rows, nisa, wife, husband, father, grandfather, sons, daughters, mother, brothers, sisters, nisaShare, leftover, msPool, fgChildrenPool};
+}
+function rowHtml(title, frac, share, amount, cls){
+  return `<div class="group-title ${cls}"><div>${title}</div><div class="small">${frac} = ${pct(share)} • ${money(amount)}</div></div>`;
+}
+function personHtml(name, frac, share, amt, cls){
+  return `<div class="person ${cls}"><div class="name">${name}</div><div class="line">${frac} = ${pct(share)}</div><div class="line">${money(amt)}</div></div>`;
+}
+function render(){
+  const d=calc();
+  const find = name => d.rows.find(r=>r.name===name);
+  let html="";
+
+  if(d.nisa>0){
+    html += rowHtml("Nisa", d.rows[0].frac, d.rows[0].share, d.rows[0].amt, "nisaTitle");
+    html += `<div class="people nisaPeople" style="grid-template-columns:repeat(${d.nisa},1fr)">`;
+    for(let i=1;i<=d.nisa;i++){ const r=find("Nisa "+i); html+=personHtml(r.name,r.frac,r.share,r.amt,"nisaPerson"); }
+    html += `</div>`;
+  }
+
+  const msRows = d.rows.filter(r => r.name==="Mother" || r.name.startsWith("Brother ") || r.name.startsWith("Sister "));
+  if(msRows.length){
+    const msAmt = msRows.reduce((s,r)=>s+r.amt,0), msShare=msAmt/d.total;
+    html += rowHtml("Mother + Siblings", fracFromDecimal(msShare), msShare, msAmt, "msTitle");
+    html += `<div class="people msPeople" style="grid-template-columns:repeat(${msRows.length},1fr)">`;
+    msRows.forEach(r=> html+=personHtml(r.name,r.frac,r.share,r.amt,"msPerson"));
+    html += `</div>`;
+  }
+
+  const fgRows = d.rows.filter(r => r.name==="Father" || r.name==="Grandfather");
+  if(fgRows.length){
+    const fgAmt = fgRows.reduce((s,r)=>s+r.amt,0), fgShare=fgAmt/d.total;
+    html += rowHtml("Father + Grandfather", fracFromDecimal(fgShare), fgShare, fgAmt, "fgTitle");
+    html += `<div class="people fgPeople" style="grid-template-columns:repeat(${fgRows.length},1fr)">`;
+    fgRows.forEach(r=> html+=personHtml(r.name,r.frac,r.share,r.amt,"fgPerson"));
+    html += `</div>`;
+  }
+
+  const sonRows = d.rows.filter(r=>r.name.startsWith("Son "));
+  const daughterRows = d.rows.filter(r=>r.name.startsWith("Daughter "));
+  if(sonRows.length || daughterRows.length){
+    html += `<div class="childrenRow">`;
+    html += `<div class="childBlock">`;
+    const sa = sonRows.reduce((s,r)=>s+r.amt,0), ss=d.total?sa/d.total:0;
+    html += `<div class="childTitle sonTitle"><div>Sons</div><div class="small">${fracFromDecimal(ss)} = ${pct(ss)} • ${money(sa)}</div></div>`;
+    html += `<div class="people sonsPeople" style="grid-template-columns:repeat(${Math.max(sonRows.length,1)},1fr)">`;
+    if(sonRows.length) sonRows.forEach(r=>html+=personHtml(r.name,r.frac,r.share,r.amt,"sonPerson"));
+    else html += `<div class="person sonPerson"><div class="name">No Sons</div><div class="line">0</div></div>`;
+    html += `</div></div>`;
+
+    html += `<div class="childBlock">`;
+    const da = daughterRows.reduce((s,r)=>s+r.amt,0), ds=d.total?da/d.total:0;
+    html += `<div class="childTitle daughterTitle"><div>Daughters</div><div class="small">${fracFromDecimal(ds)} = ${pct(ds)} • ${money(da)}</div></div>`;
+    html += `<div class="people daughtersPeople" style="grid-template-columns:repeat(${Math.max(daughterRows.length,1)},1fr)">`;
+    if(daughterRows.length) daughterRows.forEach(r=>html+=personHtml(r.name,r.frac,r.share,r.amt,"daughterPerson"));
+    else html += `<div class="person daughterPerson"><div class="name">No Daughters</div><div class="line">0</div></div>`;
+    html += `</div></div></div>`;
+  }
+
+  const z = d.rows.find(r=>r.name.includes("Zauj"));
+  if(z) html += rowHtml(z.name, z.frac, z.share, z.amt, "zaujTitle");
+
+  $("visual").innerHTML = html;
+
+  $("tbody").innerHTML = d.rows.map(r=>`<tr><td>${r.name}</td><td>${r.frac}</td><td>${pct(r.share)}</td><td>${money(r.amt)}</td><td>${r.note}</td></tr>`).join("");
+  const sum = d.rows.filter(r=>!r.name.includes("(All)")).reduce((s,r)=>s+r.amt,0);
+  $("totalPct").textContent = pct(sum/d.total);
+  $("totalAmt").textContent = money(sum);
+  $("status").textContent = "Total shown: " + pct(sum/d.total) + " of Total Amount";
+}
+document.querySelectorAll("input,select").forEach(el=>el.addEventListener("change",render));
+render();
+</script>
 </body>
 </html>
