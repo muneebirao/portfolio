@@ -14,6 +14,7 @@
   --son:#1267d8; --sonSoft:#eef6ff;
   --daughter:#ec2b7a; --daughterSoft:#fff0f6;
   --zauj:#095acb; --zaujSoft:#eef5ff;
+  --sectionHeader:#64748b;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
@@ -27,7 +28,7 @@ input,select{height:38px;border:1px solid #ccd6e4;border-radius:9px;padding:0 10
 button{flex:1;border:0;height:43px;border-radius:9px;background:#075ce6;color:#fff;font-weight:900;cursor:pointer}button.secondary{background:#64748b}
 .main{padding:16px}.visual{display:flex;flex-direction:column;gap:18px}
 .group{border:2px solid var(--c);background:var(--soft);border-radius:18px;padding:16px}
-.groupHeader{width:min(560px,62%);margin:0 auto 14px;background:var(--c);color:#fff;text-align:center;font-weight:900;font-size:18px;padding:10px 16px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.groupHeader{width:min(560px,62%);margin:0 auto 14px;background:var(--sectionHeader);color:#fff;text-align:center;font-weight:900;font-size:18px;padding:10px 16px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
 .summary{background:var(--c);color:#fff;border-radius:12px;padding:13px;text-align:center;font-weight:900;margin-bottom:10px}
 .summary .title{font-size:20px}.summary .meta{font-size:15px;margin-top:4px}
 .people{display:grid;gap:0;border-radius:12px;overflow:hidden}
@@ -35,6 +36,9 @@ button{flex:1;border:0;height:43px;border-radius:9px;background:#075ce6;color:#f
 .person:last-child{border-right:0}.person .name{font-size:17px;font-weight:900;white-space:nowrap}.person .share{font-size:14px;white-space:nowrap}.person .amount{font-size:16px;font-weight:900;white-space:nowrap}
 .subgroup{border:2px solid var(--c);border-radius:14px;overflow:hidden;background:#fff;margin-top:12px}
 .childrenGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.leftoverBox{border:2px solid var(--sectionHeader);background:#f8fafc;border-radius:18px;padding:16px;text-align:center}
+.leftoverBox .leftoverTitle{background:var(--sectionHeader);color:#fff;width:min(560px,62%);margin:0 auto 12px;padding:10px 16px;border-radius:10px;font-weight:900;font-size:18px}
+.leftoverBox .leftoverMeta{color:var(--navy);font-weight:900;font-size:17px;line-height:1.45}
 .empty{padding:28px;text-align:center;background:#f8fafc;border:1px dashed #cbd5e1;color:#475569;font-weight:900;border-radius:12px}
 .tableWrap{margin-top:18px;overflow:auto}table{width:100%;border-collapse:collapse;background:#fff;font-size:14px}th{background:var(--navy);color:#fff;padding:9px;text-align:left}td{border:1px solid #d9dfeb;padding:8px}tfoot td{font-weight:900;background:#fff4c7}
 .status{margin-top:12px;padding:13px;border-radius:9px;text-align:center;font-weight:900}.author{margin-top:18px;text-align:center;color:var(--muted);font-size:13px;font-weight:700}
@@ -100,33 +104,94 @@ function calc(){
   const present=nisa+wife+husband+father+grandfather+sons+daughters+mother+brothers+sisters;
   if(present===1){let only=rows.find(r=>!r.name.includes("(All)"));if(only)rows=[{name:only.name,frac:"1/1",share:1,amt:total,note:"Only person present → receives 100% of TotalAmount"}]}
   if(present>1&&nisa>0){let assigned=rows.filter(r=>!r.name.includes("(All)")).reduce((s,r)=>s+r.amt,0),res=total-assigned;if(res>0.009){let each=res/nisa;for(let i=1;i<=nisa;i++){let r=rows.find(x=>x.name===`Nisa ${i}`);if(r){r.amt+=each;r.share=total?r.amt/total:0;r.frac=frac(r.share);r.note="Original Nisa share + equal share of remaining unassigned amount"}}let g=rows.find(x=>x.name==="Nisa (All)");if(g){let nr=rows.filter(x=>x.name.startsWith("Nisa ")&&!x.name.includes("(All)"));g.amt=nr.reduce((s,x)=>s+x.amt,0);g.share=total?g.amt/total:0;g.frac=frac(g.share);g.note="Total Nisa share after receiving remaining unassigned amount"}}}
-  return {total,rows,nisa,wife,husband,father,grandfather,sons,daughters,mother,brothers,sisters}
+  return {total,rows,nisa,wife,husband,father,grandfather,sons,daughters,mother,brothers,sisters,leftover}
 }
 function sum(rows){return rows.reduce((s,r)=>s+r.amt,0)}
 function group(cls,title,color,soft,inner){return `<section class="group ${cls}" style="--c:${color};--soft:${soft}"><div class="groupHeader">${title}</div>${inner}</section>`}
-function summary(title,rows,color,total){let amount=sum(rows),sh=total?amount/total:0;return `<div class="summary" style="--c:${color};background:${color}"><div class="title">${title}</div><div class="meta">${frac(sh)} = ${pct(sh)} • ${money(amount)}</div></div>`}
+function summary(title,rows,color,total,leftover=0,showLeftOver=false){
+  let amount=sum(rows),sh=total?amount/total:0;
+  let meta=`${frac(sh)} = ${pct(sh)} of Total • ${money(amount)}`;
+  if(showLeftOver && leftover && Math.abs(leftover-total)>0.01){
+    let lo = amount/leftover;
+
+    if(Math.abs(lo-sh)>0.0001 && Math.abs(lo-1)>0.0001){
+        meta += `<br>${frac(lo)} = ${pct(lo)} of Left Over`;
+    }
+}
+  return `<div class="summary" style="--c:${color};background:${color}"><div class="title">${title}</div><div class="meta">${meta}</div></div>`;
+}
 function card(r,color){return `<div class="person" style="--c:${color};background:${color}"><div class="name">${r.name}</div><div class="share">${r.frac} = ${pct(r.share)}</div><div class="amount">${money(r.amt)}</div></div>`}
 function empty(name,color){return `<div class="person" style="--c:${color};background:${color}"><div class="name">${name}</div><div class="share">0 = 0.00%</div><div class="amount">$0.00</div></div>`}
+function leftoverBlock(d){
+  let sh=d.total?d.leftover/d.total:0;
+  return `<section class="leftoverBox"><div class="leftoverTitle">Left Over Amount</div><div class="leftoverMeta">${frac(sh)} = ${pct(sh)} of Total • ${money(d.leftover)}</div></section>`;
+}
 function renderVisual(d){
   let html="", nisaRows=d.rows.filter(r=>r.name.startsWith("Nisa ")&&!r.name.includes("(All)"));
-  if(nisaRows.length){let inner=summary("Nisa",nisaRows,C.nisa,d.total)+`<div class="people" style="grid-template-columns:repeat(${nisaRows.length},1fr)">`+nisaRows.map(r=>card(r,C.nisa)).join("")+`</div>`;html+=group("gNisa","Nisa Group",C.nisa,C.nisaSoft,inner)}
+
+  if(nisaRows.length){
+    let inner=summary("Nisa",nisaRows,C.nisa,d.total)+`<div class="people" style="grid-template-columns:repeat(${nisaRows.length},1fr)">`+nisaRows.map(r=>card(r,C.nisa)).join("")+`</div>`;
+    html+=group("gNisa","Nisa Group",C.nisa,C.nisaSoft,inner);
+  }
+
+  if(d.nisa>0 || d.wife>0 || d.husband>0){
+    html+=leftoverBlock(d);
+  }
+
+  let fgRows=d.rows.filter(r=>r.name==="Father"||r.name==="Grandfather"),
+      sonRows=d.rows.filter(r=>r.name.startsWith("Son ")),
+      daughterRows=d.rows.filter(r=>r.name.startsWith("Daughter "));
+
+  if(fgRows.length||sonRows.length||daughterRows.length){
+    let inner="";
+    if(fgRows.length){
+      inner+=summary("Father + Grandfather",fgRows,C.fgc,d.total,d.leftover,true)+`<div class="people" style="grid-template-columns:repeat(${fgRows.length},1fr)">`+fgRows.map(r=>card(r,C.fgc)).join("")+`</div>`;
+    }
+    if(sonRows.length||daughterRows.length){
+      let childRows=[...sonRows,...daughterRows];
+      inner+=`<div style="height:12px"></div>`+summary("Children",childRows,C.daughter,d.total,d.leftover,true);
+      let sonSh=d.total?sum(sonRows)/d.total:0,datSh=d.total?sum(daughterRows)/d.total:0;
+
+      if(sonRows.length&&daughterRows.length){
+        inner+=`<div class="childrenGrid"><div class="subgroup" style="--c:${C.son};border-color:${C.son}"><div class="summary" style="background:${C.son};border-radius:0"><div class="title">Sons</div><div class="meta">${frac(sonSh)} = ${pct(sonSh)} of Total • ${money(sum(sonRows))}</div></div><div class="people" style="grid-template-columns:repeat(${sonRows.length},1fr)">`+sonRows.map(r=>card(r,C.son)).join("")+`</div></div><div class="subgroup" style="--c:${C.daughter};border-color:${C.daughter}"><div class="summary" style="background:${C.daughter};border-radius:0"><div class="title">Daughters</div><div class="meta">${frac(datSh)} = ${pct(datSh)} of Total • ${money(sum(daughterRows))}</div></div><div class="people" style="grid-template-columns:repeat(${daughterRows.length},1fr)">`+daughterRows.map(r=>card(r,C.daughter)).join("")+`</div></div></div>`;
+      }else if(sonRows.length){
+        inner+=`<div class="subgroup" style="--c:${C.son};border-color:${C.son}"><div class="summary" style="background:${C.son};border-radius:0"><div class="title">Sons</div><div class="meta">${frac(sonSh)} = ${pct(sonSh)} of Total • ${money(sum(sonRows))}</div></div><div class="people" style="grid-template-columns:repeat(${sonRows.length},1fr)">`+sonRows.map(r=>card(r,C.son)).join("")+`</div></div>`;
+      }else if(daughterRows.length){
+        inner+=`<div class="subgroup" style="--c:${C.daughter};border-color:${C.daughter}"><div class="summary" style="background:${C.daughter};border-radius:0"><div class="title">Daughters</div><div class="meta">${frac(datSh)} = ${pct(datSh)} of Total • ${money(sum(daughterRows))}</div></div><div class="people" style="grid-template-columns:repeat(${daughterRows.length},1fr)">`+daughterRows.map(r=>card(r,C.daughter)).join("")+`</div></div>`;
+      }
+    }
+    html+=group("gFGC","Father + Grandfather + Children Group",C.fgc,C.fgcSoft,inner);
+  }
+
   let msRows=d.rows.filter(r=>r.name==="Mother"||r.name.startsWith("Brother ")||r.name.startsWith("Sister "));
-  if(msRows.length){let inner=summary("Mother + Siblings",msRows,C.ms,d.total)+`<div class="people" style="grid-template-columns:repeat(${msRows.length},1fr)">`+msRows.map(r=>card(r,C.ms)).join("")+`</div>`;html+=group("gMS","Mother + Siblings Group",C.ms,C.msSoft,inner)}
-  let fgRows=d.rows.filter(r=>r.name==="Father"||r.name==="Grandfather"),sonRows=d.rows.filter(r=>r.name.startsWith("Son ")),daughterRows=d.rows.filter(r=>r.name.startsWith("Daughter "));
-  if(fgRows.length||sonRows.length||daughterRows.length){let inner="";if(fgRows.length)inner+=summary("Father + Grandfather",fgRows,C.fgc,d.total)+`<div class="people" style="grid-template-columns:repeat(${fgRows.length},1fr)">`+fgRows.map(r=>card(r,C.fgc)).join("")+`</div>`;if(sonRows.length||daughterRows.length){let sonSh=d.total?sum(sonRows)/d.total:0,datSh=d.total?sum(daughterRows)/d.total:0;
-if(sonRows.length&&daughterRows.length){
-inner+=`<div class="childrenGrid"><div class="subgroup" style="--c:${C.son};border-color:${C.son}"><div class="summary" style="background:${C.son};border-radius:0"><div class="title">Sons</div><div class="meta">${frac(sonSh)} = ${pct(sonSh)} • ${money(sum(sonRows))}</div></div><div class="people" style="grid-template-columns:repeat(${sonRows.length},1fr)">`+sonRows.map(r=>card(r,C.son)).join("")+`</div></div><div class="subgroup" style="--c:${C.daughter};border-color:${C.daughter}"><div class="summary" style="background:${C.daughter};border-radius:0"><div class="title">Daughters</div><div class="meta">${frac(datSh)} = ${pct(datSh)} • ${money(sum(daughterRows))}</div></div><div class="people" style="grid-template-columns:repeat(${daughterRows.length},1fr)">`+daughterRows.map(r=>card(r,C.daughter)).join("")+`</div></div></div>`;
-}else if(sonRows.length){
-inner+=`<div class="subgroup" style="--c:${C.son};border-color:${C.son}"><div class="summary" style="background:${C.son};border-radius:0"><div class="title">Sons</div><div class="meta">${frac(sonSh)} = ${pct(sonSh)} • ${money(sum(sonRows))}</div></div><div class="people" style="grid-template-columns:repeat(${sonRows.length},1fr)">`+sonRows.map(r=>card(r,C.son)).join("")+`</div></div>`;
-}else if(daughterRows.length){
-inner+=`<div class="subgroup" style="--c:${C.daughter};border-color:${C.daughter}"><div class="summary" style="background:${C.daughter};border-radius:0"><div class="title">Daughters</div><div class="meta">${frac(datSh)} = ${pct(datSh)} • ${money(sum(daughterRows))}</div></div><div class="people" style="grid-template-columns:repeat(${daughterRows.length},1fr)">`+daughterRows.map(r=>card(r,C.daughter)).join("")+`</div></div>`;
-}}html+=group("gFGC","Father + Grandfather + Children Group",C.fgc,C.fgcSoft,inner)}
-  let z=d.rows.find(r=>r.name.includes("Zauj"));if(z){let inner=`<div class="summary" style="background:${C.zauj};margin-bottom:0"><div class="title">${z.name}</div><div class="meta">${z.frac} = ${pct(z.share)} • ${money(z.amt)}</div></div>`;html+=group("gZauj","Zauj Group",C.zauj,C.zaujSoft,inner)}
-  $("visual").innerHTML=html||`<div class="empty">No recipients selected.</div>`
+  if(msRows.length){
+    let inner=summary("Mother + Siblings",msRows,C.ms,d.total,d.leftover,true)+`<div class="people" style="grid-template-columns:repeat(${msRows.length},1fr)">`+msRows.map(r=>card(r,C.ms)).join("")+`</div>`;
+    html+=group("gMS","Mother + Siblings Group",C.ms,C.msSoft,inner);
+  }
+
+  let z=d.rows.find(r=>r.name.includes("Zauj"));
+  if(z){
+    let inner=`<div class="summary" style="background:${C.zauj};margin-bottom:0"><div class="title">${z.name}</div><div class="meta">${z.frac} = ${pct(z.share)} • ${money(z.amt)}</div></div>`;
+    html+=group("gZauj","Zauj Group",C.zauj,C.zaujSoft,inner);
+  }
+
+  $("visual").innerHTML=html||`<div class="empty">No recipients selected.</div>`;
 }
 function renderTable(d){$("tbody").innerHTML=d.rows.map(r=>`<tr><td>${r.name}</td><td>${r.frac}</td><td>${pct(r.share)}</td><td>${money(r.amt)}</td><td>${r.note}</td></tr>`).join("");let assigned=d.rows.filter(r=>!r.name.includes("(All)")).reduce((s,r)=>s+r.amt,0);$("totalPct").textContent=d.total?pct(assigned/d.total):"0.00%";$("totalAmt").textContent=money(assigned);let diff=d.total-assigned,st=$("status");if(Math.abs(diff)<0.01){st.style.background="#e8f8e9";st.style.color="#16621c";st.textContent="✓ Shares balance correctly. Total shown: "+(d.total?pct(assigned/d.total):"0.00%")}else if(diff>0.01){st.style.background="#fff3cd";st.style.color="#8a5a00";st.textContent="⚠ WARNING: Unallocated amount remaining: "+money(diff)+" ("+(d.total?pct(diff/d.total):"0.00%")+")"}else{st.style.background="#fde2e2";st.style.color="#b00020";st.textContent="❌ ERROR: Shares exceed Total Amount by "+money(-diff)+" ("+(d.total?pct((-diff)/d.total):"0.00%")+")"}}
 function render(){let d=calc();renderVisual(d);renderTable(d)}
-function reset(){["total","sex","nisa","wife","husband","father","grandfather","sons","daughters","mother","brothers","sisters"].forEach(()=>{});$("total").value=120000;$("sex").value="Male";$("nisa").value=0;$("wife").value=1;$("husband").value=0;$("father").value=1;$("grandfather").value=0;$("sons").value=0;$("daughters").value=3;$("mother").value=1;$("brothers").value=0;$("sisters").value=0;render()}
+function reset(){["total","sex","nisa","wife","husband","father","grandfather","sons","daughters","mother","brothers","sisters"].forEach(()=>{});$("total").value=120000;
+$("sex").value="Male";
+$("nisa").value=0;
+$("wife").value=0;
+$("husband").value=0;
+$("father").value=0;
+$("grandfather").value=0;
+$("sons").value=0;
+$("daughters").value=0;
+$("mother").value=0;
+$("brothers").value=0;
+$("sisters").value=0;
+render()}
 document.querySelectorAll("input,select").forEach(e=>e.addEventListener("change",render));$("calcBtn").addEventListener("click",render);$("resetBtn").addEventListener("click",reset);render();
 </script>
 </body>
