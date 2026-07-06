@@ -88,10 +88,21 @@ function calc(){
   clamp();
   const total=Number($("total").value||0),nisa=val("nisa"),wife=val("wife"),husband=val("husband"),father=val("father"),grandfather=val("grandfather"),sons=val("sons"),daughters=val("daughters"),mother=val("mother"),brothers=val("brothers"),sisters=val("sisters");
   const hasChildren=sons+daughters>0,hasSiblings=brothers+sisters>0;let rows=[];
-  let nisaShare=0;if(nisa===1)nisaShare=1/2;if(nisa===2)nisaShare=1/2;if(nisa===3||nisa===4)nisaShare=2/3;
-  if(nisa>0){addShare(rows,"Nisa (All)",nisaShare,total,"Total Nisa share");let each=nisaShare/nisa;for(let i=1;i<=nisa;i++)addShare(rows,`Nisa ${i}`,each,total,"Individual Nisa share")}
   const wifeShare=wife?(hasChildren?1/8:1/4):0, husbandShare=husband?(hasChildren?1/4:1/2):0;
-  const leftover=total-((nisaShare+wifeShare+husbandShare)*total);
+  const wifeAmount=wifeShare*total, husbandAmount=husbandShare*total;
+
+  let nisaRate=0;if(nisa===1)nisaRate=1/2;if(nisa===2)nisaRate=1/2;if(nisa===3||nisa===4)nisaRate=2/3;
+  const nisaBase=wifeAmount>0?(total-wifeAmount):total;
+  const nisaAmount=nisaRate*nisaBase;
+
+  if(nisa>0){
+    addAmt(rows,"Nisa (All)",nisaAmount,total,wifeAmount>0?"Total Nisa share calculated from TotalAmount minus Wife share":"Total Nisa share");
+    let each=nisaAmount/nisa;
+    for(let i=1;i<=nisa;i++)addAmt(rows,`Nisa ${i}`,each,total,wifeAmount>0?"Individual Nisa share calculated from TotalAmount minus Wife share":"Individual Nisa share");
+  }
+
+  const leftoverAfterZauj=total-wifeAmount-husbandAmount;
+  const leftover=leftoverAfterZauj-nisaAmount;
   let msPool=(mother||hasSiblings)?leftover/3:0, fgcPool=leftover-msPool;
   if(father+grandfather+sons+daughters===0&&msPool>0){msPool=leftover;fgcPool=0}
   if(mother+brothers+sisters===0&&fgcPool>0){fgcPool=leftover;msPool=0}
@@ -104,7 +115,7 @@ function calc(){
   const present=nisa+wife+husband+father+grandfather+sons+daughters+mother+brothers+sisters;
   if(present===1){let only=rows.find(r=>!r.name.includes("(All)"));if(only)rows=[{name:only.name,frac:"1/1",share:1,amt:total,note:"Only person present → receives 100% of TotalAmount"}]}
   if(present>1&&nisa>0){let assigned=rows.filter(r=>!r.name.includes("(All)")).reduce((s,r)=>s+r.amt,0),res=total-assigned;if(res>0.009){let each=res/nisa;for(let i=1;i<=nisa;i++){let r=rows.find(x=>x.name===`Nisa ${i}`);if(r){r.amt+=each;r.share=total?r.amt/total:0;r.frac=frac(r.share);r.note="Original Nisa share + equal share of remaining unassigned amount"}}let g=rows.find(x=>x.name==="Nisa (All)");if(g){let nr=rows.filter(x=>x.name.startsWith("Nisa ")&&!x.name.includes("(All)"));g.amt=nr.reduce((s,x)=>s+x.amt,0);g.share=total?g.amt/total:0;g.frac=frac(g.share);g.note="Total Nisa share after receiving remaining unassigned amount"}}}
-  return {total,rows,nisa,wife,husband,father,grandfather,sons,daughters,mother,brothers,sisters,leftover}
+  return {total,rows,nisa,wife,husband,father,grandfather,sons,daughters,mother,brothers,sisters,leftoverAfterZauj,leftover}
 }
 function sum(rows){return rows.reduce((s,r)=>s+r.amt,0)}
 function group(cls,title,color,soft,inner){return `<section class="group ${cls}" style="--c:${color};--soft:${soft}"><div class="groupHeader">${title}</div>${inner}</section>`}
@@ -122,20 +133,34 @@ function summary(title,rows,color,total,leftover=0,showLeftOver=false){
 }
 function card(r,color){return `<div class="person" style="--c:${color};background:${color}"><div class="name">${r.name}</div><div class="share">${r.frac} = ${pct(r.share)}</div><div class="amount">${money(r.amt)}</div></div>`}
 function empty(name,color){return `<div class="person" style="--c:${color};background:${color}"><div class="name">${name}</div><div class="share">0 = 0.00%</div><div class="amount">$0.00</div></div>`}
-function leftoverBlock(d){
-  let sh=d.total?d.leftover/d.total:0;
-  return `<section class="leftoverBox"><div class="leftoverTitle">Left Over Amount</div><div class="leftoverMeta">${frac(sh)} = ${pct(sh)} of Total • ${money(d.leftover)}</div></section>`;
+function leftoverBlock(title,amount,total){
+  let sh=total?amount/total:0;
+  return `<section class="leftoverBox"><div class="leftoverTitle">${title}</div><div class="leftoverMeta">${frac(sh)} = ${pct(sh)} of Total • ${money(amount)}</div></section>`;
 }
 function renderVisual(d){
   let html="", nisaRows=d.rows.filter(r=>r.name.startsWith("Nisa ")&&!r.name.includes("(All)"));
 
-  if(nisaRows.length){
-    let inner=summary("Nisa",nisaRows,C.nisa,d.total)+`<div class="people" style="grid-template-columns:repeat(${nisaRows.length},1fr)">`+nisaRows.map(r=>card(r,C.nisa)).join("")+`</div>`;
-    html+=group("gNisa","Nisa Group",C.nisa,C.nisaSoft,inner);
+  let z=d.rows.find(r=>r.name.includes("Zauj"));
+  if(z){
+    let inner=`<div class="summary" style="background:${C.zauj};margin-bottom:0"><div class="title">${z.name}</div><div class="meta">${z.frac} = ${pct(z.share)} • ${money(z.amt)}</div></div>`;
+    html+=group("gZauj","Zauj Group",C.zauj,C.zaujSoft,inner);
+    html+=leftoverBlock("Left Over After Zauj Share",d.leftoverAfterZauj,d.total);
   }
 
-  if(d.nisa>0 || d.wife>0 || d.husband>0){
-    html+=leftoverBlock(d);
+  if(nisaRows.length){
+    let nisaAmount=sum(nisaRows);
+    let totalShare=d.total?nisaAmount/d.total:0;
+    let lo1Share=d.leftoverAfterZauj?nisaAmount/d.leftoverAfterZauj:0;
+    let nisaMeta=`${frac(totalShare)} = ${pct(totalShare)} of Total`;
+    if(d.leftoverAfterZauj>0 && Math.abs(d.leftoverAfterZauj-d.total)>0.01){
+      nisaMeta+=`<br>${frac(lo1Share)} = ${pct(lo1Share)} of Left Over 1 • ${money(nisaAmount)}`;
+    }else{
+      nisaMeta+=` • ${money(nisaAmount)}`;
+    }
+    let inner=`<div class="summary" style="--c:${C.nisa};background:${C.nisa}"><div class="title">Nisa</div><div class="meta">${nisaMeta}</div></div>`+
+      `<div class="people" style="grid-template-columns:repeat(${nisaRows.length},1fr)">`+nisaRows.map(r=>card(r,C.nisa)).join("")+`</div>`;
+    html+=group("gNisa","Nisa Group",C.nisa,C.nisaSoft,inner);
+    html+=leftoverBlock("Left Over After Nisa Share",d.leftover,d.total);
   }
 
   let fgRows=d.rows.filter(r=>r.name==="Father"||r.name==="Grandfather"),
@@ -143,13 +168,14 @@ function renderVisual(d){
       daughterRows=d.rows.filter(r=>r.name.startsWith("Daughter "));
 
   if(fgRows.length||sonRows.length||daughterRows.length){
-    let inner="";
+    let allFGC=[...fgRows,...sonRows,...daughterRows];
+    let inner=summary("Father + Grandfather + Children",allFGC,C.fgc,d.total,d.leftover,true);
+
     if(fgRows.length){
-      inner+=summary("Father + Grandfather",fgRows,C.fgc,d.total,d.leftover,true)+`<div class="people" style="grid-template-columns:repeat(${fgRows.length},1fr)">`+fgRows.map(r=>card(r,C.fgc)).join("")+`</div>`;
+      inner+=`<div class="people" style="grid-template-columns:repeat(${fgRows.length},1fr)">`+fgRows.map(r=>card(r,C.fgc)).join("")+`</div>`;
     }
+
     if(sonRows.length||daughterRows.length){
-      let childRows=[...sonRows,...daughterRows];
-      inner+=`<div style="height:12px"></div>`+summary("Children",childRows,C.daughter,d.total,d.leftover,true);
       let sonSh=d.total?sum(sonRows)/d.total:0,datSh=d.total?sum(daughterRows)/d.total:0;
 
       if(sonRows.length&&daughterRows.length){
@@ -167,12 +193,6 @@ function renderVisual(d){
   if(msRows.length){
     let inner=summary("Mother + Siblings",msRows,C.ms,d.total,d.leftover,true)+`<div class="people" style="grid-template-columns:repeat(${msRows.length},1fr)">`+msRows.map(r=>card(r,C.ms)).join("")+`</div>`;
     html+=group("gMS","Mother + Siblings Group",C.ms,C.msSoft,inner);
-  }
-
-  let z=d.rows.find(r=>r.name.includes("Zauj"));
-  if(z){
-    let inner=`<div class="summary" style="background:${C.zauj};margin-bottom:0"><div class="title">${z.name}</div><div class="meta">${z.frac} = ${pct(z.share)} • ${money(z.amt)}</div></div>`;
-    html+=group("gZauj","Zauj Group",C.zauj,C.zaujSoft,inner);
   }
 
   $("visual").innerHTML=html||`<div class="empty">No recipients selected.</div>`;
