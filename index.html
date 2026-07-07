@@ -145,7 +145,7 @@ function card(r,color,d=null){
   let extra="";
   if(d && isLeftOverPerson(r.name) && d.leftover && Math.abs(d.leftover)>0.01){
     let loShare=r.amt/d.leftover;
-    extra=`<div class="share">${frac(loShare)} = ${pct(loShare)} of Left Over</div>`;
+    extra=`<div class="share">${frac(loShare)} = ${pct(loShare)} of ${money(d.leftover)}</div>`;
   }
   return `<div class="person" style="--c:${color};background:${color}"><div class="name">${r.name}</div><div class="share">${r.frac} = ${pct(r.share)} of Total</div>${extra}<div class="amount">${money(r.amt)}</div></div>`;
 }
