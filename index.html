@@ -126,7 +126,7 @@ function summary(title,rows,color,total,leftover=0,showLeftOver=false){
     let lo = amount/leftover;
 
     if(Math.abs(lo-sh)>0.0001 && Math.abs(lo-1)>0.0001){
-        meta += `<br>${frac(lo)} = ${pct(lo)} of Left Over`;
+        meta += `<br>${frac(lo)} = ${pct(lo)} of ${money(leftover)}`;
     }
 }
   return `<div class="summary" style="--c:${color};background:${color}"><div class="title">${title}</div><div class="meta">${meta}</div></div>`;
@@ -196,11 +196,11 @@ function renderVisual(d){
       let sonSh=d.total?sum(sonRows)/d.total:0,datSh=d.total?sum(daughterRows)/d.total:0;
 
       if(sonRows.length&&daughterRows.length){
-        inner+=`<div class="childrenGrid"><div class="subgroup" style="--c:${C.son};border-color:${C.son}"><div class="summary" style="background:${C.son};border-radius:0"><div class="title">Sons</div><div class="meta">${frac(sonSh)} = ${pct(sonSh)} of Total • ${money(sum(sonRows))}</div></div><div class="people" style="grid-template-columns:repeat(${sonRows.length},1fr)">`+sonRows.map(r=>card(r,C.son,d)).join("")+`</div></div><div class="subgroup" style="--c:${C.daughter};border-color:${C.daughter}"><div class="summary" style="background:${C.daughter};border-radius:0"><div class="title">Daughters</div><div class="meta">${frac(datSh)} = ${pct(datSh)} of Total • ${money(sum(daughterRows))}</div></div><div class="people" style="grid-template-columns:repeat(${daughterRows.length},1fr)">`+daughterRows.map(r=>card(r,C.daughter,d)).join("")+`</div></div></div>`;
+        inner+=`<div class="childrenGrid"><div class="subgroup" style="--c:${C.son};border-color:${C.son}"><div class="summary" style="background:${C.son};border-radius:0"><div class="title">Sons</div><div class="meta">${frac(sonSh)} = ${pct(sonSh)} of Total • ${money(sum(sonRows))}<br>${frac(sum(sonRows)/d.leftover)} = ${pct(sum(sonRows)/d.leftover)} of ${money(d.leftover)}</div></div><div class="people" style="grid-template-columns:repeat(${sonRows.length},1fr)">`+sonRows.map(r=>card(r,C.son,d)).join("")+`</div></div><div class="subgroup" style="--c:${C.daughter};border-color:${C.daughter}"><div class="summary" style="background:${C.daughter};border-radius:0"><div class="title">Daughters</div><div class="meta">${frac(datSh)} = ${pct(datSh)} of Total • ${money(sum(daughterRows))}<br>${frac(sum(daughterRows)/d.leftover)} = ${pct(sum(daughterRows)/d.leftover)} of ${money(d.leftover)}</div></div><div class="people" style="grid-template-columns:repeat(${daughterRows.length},1fr)">`+daughterRows.map(r=>card(r,C.daughter,d)).join("")+`</div></div></div>`;
       }else if(sonRows.length){
-        inner+=`<div class="subgroup" style="--c:${C.son};border-color:${C.son}"><div class="summary" style="background:${C.son};border-radius:0"><div class="title">Sons</div><div class="meta">${frac(sonSh)} = ${pct(sonSh)} of Total • ${money(sum(sonRows))}</div></div><div class="people" style="grid-template-columns:repeat(${sonRows.length},1fr)">`+sonRows.map(r=>card(r,C.son,d)).join("")+`</div></div>`;
+        inner+=`<div class="subgroup" style="--c:${C.son};border-color:${C.son}"><div class="summary" style="background:${C.son};border-radius:0"><div class="title">Sons</div><div class="meta">${frac(sonSh)} = ${pct(sonSh)} of Total • ${money(sum(sonRows))}<br>${frac(sum(sonRows)/d.leftover)} = ${pct(sum(sonRows)/d.leftover)} of ${money(d.leftover)}</div></div><div class="people" style="grid-template-columns:repeat(${sonRows.length},1fr)">`+sonRows.map(r=>card(r,C.son,d)).join("")+`</div></div>`;
       }else if(daughterRows.length){
-        inner+=`<div class="subgroup" style="--c:${C.daughter};border-color:${C.daughter}"><div class="summary" style="background:${C.daughter};border-radius:0"><div class="title">Daughters</div><div class="meta">${frac(datSh)} = ${pct(datSh)} of Total • ${money(sum(daughterRows))}</div></div><div class="people" style="grid-template-columns:repeat(${daughterRows.length},1fr)">`+daughterRows.map(r=>card(r,C.daughter,d)).join("")+`</div></div>`;
+        inner+=`<div class="subgroup" style="--c:${C.daughter};border-color:${C.daughter}"><div class="summary" style="background:${C.daughter};border-radius:0"><div class="title">Daughters</div><div class="meta">${frac(datSh)} = ${pct(datSh)} of Total • ${money(sum(daughterRows))}<br>${frac(sum(daughterRows)/d.leftover)} = ${pct(sum(daughterRows)/d.leftover)} of ${money(d.leftover)}</div></div><div class="people" style="grid-template-columns:repeat(${daughterRows.length},1fr)">`+daughterRows.map(r=>card(r,C.daughter,d)).join("")+`</div></div>`;
       }
     }
     html+=group("gFGC","Father + Grandfather + Children Group",C.fgc,C.fgcSoft,inner);
